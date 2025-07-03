@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pontos De Interesse</title>
+
+    <!-- Incluir o código css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Incluir o código JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<!-- Link do CDN do Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+</head>
+<body>
+    <!-- div com o id map -->
+    <div id="map"></div>
+    <button id="toggleRoutesControl"><i class="fa-solid fa-route" style="color: #000000; font-size: 25px;"></i></button>
+    <button id="btnZoomToLocation"><img src="images/pessoa_icon-removebg-preview.png"></button>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<!-- Ícons do mapa -->
+<script>
+//estilos dos  icons
+var customIcon1 = L.icon({
+    iconUrl: 'images/parque_radical_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon2 = L.icon({
+    iconUrl: 'images/paroquia_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon3 = L.icon({
+    iconUrl: 'images/ferroviaria_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon4 = L.icon({
+    iconUrl: 'images/parque2_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 35],
+    popupAnchor: [-2, -35]
+});
+
+var customIcon5 = L.icon({
+    iconUrl: 'images/comboio_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon6 = L.icon({
+    iconUrl: 'images/zonaindustrial_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon7 = L.icon({
+    iconUrl: 'images/centrosaude_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon8 = L.icon({
+    iconUrl: 'images/farmacia_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon9 = L.icon({
+    iconUrl: 'images/desporto_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon10 = L.icon({
+    iconUrl: 'images/escola_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon11 = L.icon({
+    iconUrl: 'images/regimento_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon12 = L.icon({
+    iconUrl: 'images/lidl_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon13 = L.icon({
+    iconUrl: 'images/piscinas_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon14 = L.icon({
+    iconUrl: 'images/restaurante_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon15 = L.icon({
+    iconUrl: 'images/eleclerc_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon16 = L.icon({
+    iconUrl: 'images/pingodoce_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon17 = L.icon({
+    iconUrl: 'images/aldi_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon18 = L.icon({
+    iconUrl: 'images/bricomarche_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon19 = L.icon({
+    iconUrl: 'images/escolamusica_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon20 = L.icon({
+    iconUrl: 'images/lar_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon21 = L.icon({
+    iconUrl: 'images/universidade_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+var customIcon22 = L.icon({
+    iconUrl: 'images/governamental_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+// localizações e popups
+var markers = [
+marker1 = L.marker([39.47175223483574, -8.467331662246256], {icon: customIcon1}).addTo(map).bindPopup("<b>Parque Radical e de Lazer</b><br>Parque").openPopup(),
+marker2 = L.marker([39.467956777947386, -8.472002170700824], {icon: customIcon2}).addTo(map).bindPopup("<b>Paróquia de Nª Srª de Fátima</b><br>Igreja Católica").openPopup(),
+marker3 = L.marker([39.46410258367801, -8.474063097203937], {icon: customIcon3}).addTo(map).bindPopup("<b>Museu Nacional Ferroviário</b><br>Museu").openPopup(),
+marker4 = L.marker([39.480343, -8.465520], {icon: customIcon4}).addTo(map).bindPopup("<b>Parque Verde do Bonito</b><br>Parque").openPopup(),
+marker5 = L.marker([39.46564601797677, -8.470887087288782], {icon: customIcon5}).bindPopup("<b>Largo do Centro de Convívio da Terceira Idade - Locomotiva 094</b><br>Parque"),
+marker6 = L.marker([39.45904359036051, -8.49527723499912], {icon: customIcon6}).addTo(map).bindPopup("<b>Zona Industrial</b>").openPopup(),
+marker7 = L.marker([39.46617129844561, -8.471491026986069], {icon: customIcon7}).addTo(map).bindPopup("<b>Centro de Saúde</b><br>Centro de Saúde Comunitário").openPopup(),
+marker9 = L.marker([39.470739890031524, -8.47698552835517], {icon: customIcon8}).addTo(map).bindPopup("<b>Farmácia Almeida Gonçalves</b><br>Farmácia").openPopup(),
+marker10 = L.marker([39.46509378113914, -8.472708619900734], {icon: customIcon8}).addTo(map).bindPopup("<b>Farmácia da Terra</b><br>Farmácia").openPopup(),
+marker11 = L.marker([39.474447489154414, -8.466929002534615], {icon: customIcon9}).addTo(map).bindPopup("<b>Complexo Desportivo do Bonito</b>").openPopup(),
+marker12 = L.marker([39.46930281121571, -8.477507971371509], {icon: customIcon10}).addTo(map).bindPopup("<b>Escola Secundária com</b> <br><b>3.º Ciclo do Ensino Básico</b><br>Escola").openPopup(),
+marker13 = L.marker([39.46164350493712, -8.483620335172606], {icon: customIcon11}).addTo(map).bindPopup("<b>Regimento de Manutenção</b><br>Base Militar").openPopup(),
+marker14 = L.marker([39.46811634621186, -8.494838313920765], {icon: customIcon10}).addTo(map).bindPopup("<b>Colégio Andrade Corvo</b><br>Escola").openPopup(),
+marker15 = L.marker([39.47538360570139, -8.472441140908916], {icon: customIcon10}).addTo(map).bindPopup("<b>Escola Básica do Bonito</b><br>Escola").openPopup(),
+marker16 = L.marker([39.473048678596506, -8.483997078522751], {icon: customIcon18}).addTo(map).bindPopup("<b>Bricomarche</b><br>Loja de Bricolage").openPopup(),
+marker17 = L.marker([39.474712837483175, -8.485802607871442], {icon: customIcon15}).addTo(map).bindPopup("<b>E.Leclerc</b><br>Hiper-mercado").openPopup(),
+marker18 = L.marker([39.47231401179971, -8.484593535894517], {icon: customIcon17}).addTo(map).bindPopup("<b>Aldi</b><br>Super-mercado").openPopup(),
+marker19 = L.marker([39.47300996965454, -8.476428211440505], {icon: customIcon12}).addTo(map).bindPopup("<b>Lidl</b><br>Super-mercado").openPopup(),
+marker20 = L.marker([39.47432612923494, -8.468648248425879], {icon: customIcon16}).addTo(map).bindPopup("<b>Pingo Doce</b><br>Super-mercado").openPopup(),
+marker21 = L.marker([39.47062642657866, -8.468200133444856], {icon: customIcon9}).addTo(map).bindPopup("<b>Pavilhão Desportivo Municipal</b><br>Complexo Desportivo").openPopup(),
+marker22 = L.marker([39.477033360370086, -8.465753928370274], {icon: customIcon13}).addTo(map).bindPopup("<b>Piscinas Municipais</b>").openPopup(),
+marker23 = L.marker([39.47797336362563, -8.465614090087172], {icon: customIcon14}).addTo(map).bindPopup("<b>Bonito by Trincanela</b><br>Restaurante - Edifício Muncipal").openPopup(),
+marker24 = L.marker([39.46805079745097, -8.470948660009103], {icon: customIcon20}).addTo(map).bindPopup("<b>Lar Fernando Eiró Gomes</b><br>Lar de Idosos").openPopup(),
+marker25 = L.marker([39.47179828746265, -8.482825937659465], {icon: customIcon20}).addTo(map).bindPopup("<b>Associação dos Lares Ferroviários</b><br>Lar de Idosos").openPopup(),
+marker26 = L.marker([39.470350777983676, -8.480013201572927], {icon: customIcon9}).addTo(map).bindPopup("<b>Largo Casal do Saldanha</b><br>Campo de Futebol/Basquetebol").openPopup(),
+marker27 = L.marker([39.46938342154872, -8.479491399337057], {icon: customIcon4}).addTo(map).bindPopup("<b>Largo das Comunidades Europeias</b><br>Jardim").openPopup(),
+marker28 = L.marker([39.47123538219335, -8.473616070699624], {icon: customIcon22}).addTo(map).bindPopup("<b>Segurança Social</b><br>Departamento Governamental do Estado").openPopup(),
+marker29 = L.marker([39.4712359837901, -8.473899862044052], {icon: customIcon22}).addTo(map).bindPopup("<b>Sede da Freguesia</b><br>Organismo Público Local").openPopup(),
+marker30 = L.marker([39.46899175023465, -8.47338571705738], {icon: customIcon21}).addTo(map).bindPopup("<b>Universidade Sénior</b><br>Universidade").openPopup(),
+marker31 = L.marker([39.46870838666196, -8.473398662213548], {icon: customIcon19}).addTo(map).bindPopup("<b>Associação Filarmónica e Cultural</b><br>Escola de Música").openPopup(),
+marker32 = L.marker([39.472279349659004, -8.481199640612632], {icon: customIcon10}).addTo(map).bindPopup("<b>ESER - Escola de Segurança</b><br><b>& Educação Rodoviária</b><br>Escola").openPopup(),
+marker33 = L.marker([39.46537653103154, -8.468151849095172], {icon: customIcon22}).addTo(map).bindPopup("<b>Câmara Municipal</b><br>Município do Entroncamento").openPopup(),
+marker34 = L.marker([39.47104922019409, -8.478243857079173], {icon: customIcon4}).addTo(map).bindPopup("<b>Jardim José Afonso</b><br>Jardim").openPopup(),
+marker35 = L.marker([39.45410351589417, -8.488826637129408], {icon: customIcon6}).addTo(map).bindPopup("<b>Parque Empresarial</b>").openPopup(),
+marker36 = L.marker([39.47881475816284, -8.472753537216445], {icon: customIcon7}).addTo(map).bindPopup("<b>SCME - Unidade Cuidados Continuados Integrados</b><br>Hospital Especializado").openPopup()
+];
+</script>
+
+<!-- Área da freguesia de S. João Baptista -->
+<script>
+    var polygonS = L.polygon([
+    [39.4906708251402, -8.456848592758515],[39.49075282175005, -8.45681246240807],
+    [39.490707485602364, -8.456627871813865],[39.490614358356325, -8.456504808613449],
+    [39.49055165875148, -8.4565920281613],[39.490179148178925, -8.456652962366935],
+    [39.49009155257839, -8.456636235327226],[39.48972430757696, -8.456422186497269],
+    [39.48940553231972, -8.455909884564303],[39.489202674573086, -8.455708718876373],
+    [39.48894806656967, -8.455655074694945],[39.488154020905746, -8.455879006115811],
+    [39.48771519540685, -8.456619157560384],[39.48742931642178, -8.456925714944118],
+    [39.48625426426489, -8.457570429943143],[39.484919035765, -8.457838062506283],
+    [39.48441001925126, -8.458191719823734],[39.483923130415974, -8.458306419491459],
+    [39.48357640445901, -8.458535818830738],[39.48277228869305, -8.458612285272686],
+    [39.48228538837396, -8.458382885926046],[39.48070662755909, -8.460676879364016],
+    [39.48009626834188, -8.461069328725184],[39.4795872165324, -8.462636890876976],
+    [39.47818546040802, -8.4641375448915],[39.47742554923134, -8.463697862823565],
+    [39.47655242935235, -8.463515261303453],[39.475538523112725, -8.463828001777433],
+    [39.474994520963705, -8.463943973005374],[39.47432107959801, -8.463966732304296],
+    [39.47393457987481, -8.464300535340229],[39.47243540907319, -8.464543301209414],
+    [39.47118217120845, -8.4638301765123],[39.470104602831995, -8.463906040839408],
+    [39.46895088343484, -8.463815003654641],[39.4675863073425, -8.464550887639517],
+    [39.4666902406851, -8.463640515702528],[39.466286128424166, -8.46354947851091],
+    [39.466192420892135, -8.463314299084503],[39.46543689935284, -8.46266186587791],
+    [39.46431824383681, -8.462419100003139],[39.46373841008223, -8.461759080357313],
+    [39.46344556291087, -8.462100469823085],[39.456294828380265, -8.461440619222373],
+    [39.453807990449334, -8.462134254980294],[39.44494024750945, -8.469825031838502],
+    [39.44245619413027, -8.473587902172232],[39.439597079665795, -8.484876512692077],
+    [39.44303024913843, -8.491664327135275],[39.44348323904399, -8.49276507869091],
+    [39.45423788582084, -8.481715995482006],[39.46397718059705, -8.471494787509142],
+    [39.46690378720398, -8.468677060798267],[39.47847924116704, -8.46443128158551],
+    [39.479466091914986, -8.46385707918079],[39.483178539874054, -8.46020856896017],
+    [39.48515021577941, -8.458948277464797]
+],
+
+    {
+    color: '#302e2f ',
+    fillColor: 'red',
+    dashArray: '6',
+    fillOpacity: 0.2
+    }
+).addTo(map)
+</script>
+
+<!-- Área da freguesia de Nª Srª de Fátima -->
+<script>
+    var polygonF = L.polygon([
+    [39.44348323904399, -8.49276507869091],[39.44428409106051, -8.494951294345933],
+    [39.450611056091006, -8.498289324350415],
+    [39.45389147828391, -8.498410707257525],[39.45684372611096, -8.497561026897587],
+    [39.458811821757514, -8.497439643990475],[39.460873576561674, -8.498532090154484],
+    [39.46212603688545, -8.497953156037784],[39.46219486635611, -8.498544904327455],
+    [39.46363205939935, -8.498933246181732],[39.46485792715518, -8.499619891638197],
+    [39.46633225308428, -8.495950629975184],[39.46752494334544, -8.498117854735936],
+    [39.4677402880085, -8.49786036268976],[39.46820671270561, -8.498465556912839],
+    [39.4690506076797, -8.497534360082641],[39.47332125571974, -8.494851925350158],
+    [39.47571929608479, -8.494216631021335],[39.47670286305209, -8.493403124478876],
+    [39.478201297244766, -8.492521376154027],[39.478702112799944, -8.491412942322215],
+    [39.47769004431293, -8.489547529288188],[39.47782568321005, -8.487276591636313],
+    [39.48038190535728, -8.486884584467129],[39.48270646338799, -8.486977039769618],
+    [39.48234211195485, -8.482385098007573],[39.48499189713064, -8.4820954194056],
+    [39.48704417294681, -8.47548641910053],[39.48588493857245, -8.475228927000991],
+    [39.48508174342464, -8.471581122759764],[39.48681232761902, -8.471334359529674],
+    [39.48766518340408, -8.470722815894744],[39.48874158844587, -8.466098687513586],
+    [39.48906450669371, -8.46618451819919],[39.48961926018241, -8.465540788057158],
+    [39.49011605060386, -8.463244817191033],[39.49100198471347, -8.463523766880469],
+    [39.492432016396684, -8.460858272713889], [39.49177157492835, -8.459548513899186],
+    [39.49159429902678, -8.458546723534656], [39.49115718200437, -8.458127882531386],
+    [39.49086744349764, -8.457122498467697] ,[39.49073243062734, -8.457149715207084],
+    [39.4906708251402, -8.456848592758515],[39.48515021577941, -8.458948277464797],
+    [39.483178539874054, -8.46020856896017],[39.479466091914986, -8.46385707918079],
+    [39.47847924116704, -8.46443128158551],[39.46690378720398, -8.468677060798267],
+    [39.46397718059705, -8.471494787509142],[39.45423788582084, -8.481715995482006]
+],
+
+    {
+    color: '#302e2f',
+    fillColor: 'blue',
+    dashArray: '6',
+    fillOpacity: 0.05
+    }
+).addTo(map)
+</script>
+
+<!-- Área do Parque Verde do Bonito -->
+<script>
+    var polygon4 = L.polygon([
+    [39.47864977640135, -8.46483686305492],[39.47885186896675, -8.46459226313849]
+    ,[39.47976127822211, -8.464258091421927],[39.481021825601594, -8.463664225543967]
+    ,[39.48415028865693, -8.464149608009015],[39.48360478947427, -8.467112995808044]
+    ,[39.482053708189085, -8.466831984914577],[39.48094952753698, -8.467504708022433]
+    ,[39.47930636912387, -8.467266274513175],[39.47821529049935, -8.466491365637777]
+    ,[39.47785378477512, -8.466312540516347],[39.478478202573264, -8.465316229125516]
+],
+
+    {
+    color: 'green',
+    fillColor: '#3ce200',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Parque Verde do Bonito</b><br>Parque").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.480343, -8.465520], 16);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47831641627862, -8.465656567000142)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+
+        // Adiciona a segunda rota alternativa
+        var control2 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.482045163719775, -8.466909258502332)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'blue', opacity: 0.7, weight: 2}] // Estilo da linha da rota alternativa
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control2);
+
+        // Adiciona a terceira rota alternativa
+        var control3 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.48383442749999, -8.46592228072192)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'yellow', opacity: 0.7, weight: 2}] // Estilo da linha da rota alternativa
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control3);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent4 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/bonito.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Parque Verde do Bonito</b></h3>
+                <p>Parque</p>
+            </div>
+        `;
+marker4.bindPopup(popupContent4);
+marker4.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Parque Radical -->
+<script>
+    var polygon1 = L.polygon([
+    [39.47083105105451, -8.467375162956353],[39.47089105113337, -8.467469785360766]
+    ,[39.470973225070445, -8.467567787136767],[39.471058007604675, -8.467618477711822]
+    ,[39.471162355196945, -8.467650581742989],[39.472342717517755, -8.467678605967546]
+    ,[39.47244315022312, -8.467524844557484],[39.47242488974216, -8.466977386345826]
+    ,[39.47240010765352, -8.466928385457827],[39.472354456414465, -8.466884453627205],
+    [39.47229576192028, -8.466872625826653]
+],
+
+    {
+    color: 'green',
+    fillColor: '#3ce200',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Parque Radical</b><br>Parque").openPopup();
+
+// Função para zoom e rota
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47175223483574, -8.467331662246256], 17);
+
+    if (userLocation.latlng) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47175223483574, -8.467331662246256)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent1 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/parqueradical.jpg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Parque Radical</b></h3>
+                <p>Parque</p>
+            </div>
+        `;
+marker1.bindPopup(popupContent1);
+marker1.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Jardim da Locomotiva -->
+<script>
+    var polygon5 = L.polygon([
+    [39.4654694891308, -8.47075345159636],[39.465546104478456, -8.470638116612303]
+    ,[39.46562686110492, -8.470565696971148],[39.46571175899907, -8.470512052787267]
+    ,[39.46587534245059, -8.470474501861224],[39.466016148149336, -8.470490595114814]
+    ,[39.46594988667954, -8.470726629500795],[39.46561236633478, -8.471354266410954]
+    ,[39.46555438721573, -8.471442779305697]
+    ,[39.46546327707393, -8.471469601395015],[39.46540322714222, -8.471402546170976]
+    ,[39.465388732323426, -8.471348901992345],[39.46537009612339, -8.47119065166538]
+    ,[39.46540322714222, -8.47092511298115]
+],
+
+    {
+    color: 'green',
+    fillColor: '#3ce200',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Largo do Centro de Convívio da <br> Terceira Idade - Locomotiva 094</b><br>Parque").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46564601797677, -8.470887087288782],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.465542019920086, -8.470822691384788)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent5 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/jardimlocomotiva.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Largo do Centro de Convívio da <br><br> Terceira Idade - Locomotiva 094</b></h3>
+                <p>Parque</p>
+            </div>
+        `;
+marker5.bindPopup(popupContent5);
+marker5.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Museu Nacional Ferroviário -->
+<script>
+    var polygon3 = L.polygon([
+    [39.464128259001015, -8.474678868706432],[39.46383224655281, -8.47417274937635]
+    ,[39.46397433268534, -8.47381999953412],[39.46403748198413, -8.473584832977078]
+    ,[39.464092737573594, -8.473349666420036],[39.464384802103346, -8.474167637053228]
+],
+
+    {
+    color: '#6801ac',
+    fillColor: '#6801ac',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Museu Nacional Ferroviário</b><br>Museu").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46410258367801, -8.474063097203937],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46427862226767, -8.474343481727908)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent3 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/museuferroviario.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Museu Nacional Ferroviário</b></h3>
+                <p>Museu</p>
+            </div>
+        `;
+marker3.bindPopup(popupContent3);
+marker3.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Paróquia de Nª Srª de Fátima -->
+<script>
+    var polygon2 = L.polygon([
+    [39.46773443036435, -8.472161099901399],[39.46823434545259, -8.4722232288943]
+    ,[39.46818269387584, -8.471802663403649],[39.4677196726719, -8.471883909009797]
+],
+
+    {
+    color: '#8f4900',
+    fillColor: '#8f4900',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Paróquia de Nª Srª de Fátima</b><br>Igreja Católica").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.467956777947386, -8.472002170700824],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46773800279515, -8.472097364078264)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent2 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/paroquia.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Paróquia de Nª Srª de Fátima</b></h3>
+                <p>Igreja Católica</p>
+            </div>
+        `;
+marker2.bindPopup(popupContent2);
+marker2.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Zona Industrial -->
+<script>
+    var polygon6 = L.polygon([
+    [39.462008549396536, -8.497734014537786],[39.4602553107363, -8.492364074730899]
+    ,[39.459587005777806, -8.492310642464183],[39.459005327725265, -8.492604519746699]
+    ,[39.45799116250506, -8.493813800254346],[39.45643534404148, -8.494857125372372]
+    ,[39.455511313576636, -8.496964232931125],[39.45579563194113, -8.497670011731094]
+    ,[39.45760076885084, -8.496867663556545],[39.457831817546584, -8.497485469003081]
+    ,[39.458681473896576, -8.497350324061651],[39.46093226783419, -8.49839287075341]
+],
+
+    {
+    color: '#E5AB00',
+    fillColor: 'yellow',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Zona Industrial</b>").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.459023574762966, -8.49526249429081],15);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.459023574762966, -8.49526249429081)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent6 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/zonaindustrial.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Zona Industrial</b></h3>
+            </div>
+        `;
+marker6.bindPopup(popupContent6);
+marker6.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Centro de Saúde -->
+<script>
+    var polygon7 = L.polygon([
+    [39.46573341546129, -8.471648589735738],[39.46575377578023, -8.471442877937822]
+    ,[39.46616912498621, -8.47090486246635],[39.466486743294546, -8.471194968848026]
+    ,[39.466417518914994, -8.471854301533652],[39.46581892876078, -8.471764632288409]
+],
+
+    {
+    color: 'green',
+    fillColor: '#3ce200',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Centro de Saúde</b><br>Centro de Saúde Comunitário").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46617065806161, -8.471478411450446],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46632561473083, -8.471438174154242)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent7 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/centrodesaude.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Centro de Saúde</b></h3>
+                <p>Centro de Saúde Comunitário</p>
+            </div>
+        `;
+marker7.bindPopup(popupContent7);
+marker7.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Farmácia Almeida Gonçalves -->
+<script>
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.470739202591446, -8.476984035951753],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.470739202591446, -8.476984035951753)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent9 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/farmaciagoncalves.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Farmácia Almeida Gonçalves</b></h3>
+                <p>Farmácia</p>
+            </div>
+        `;
+marker9.bindPopup(popupContent9);
+marker9.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Farmácia da Terra -->
+<script>
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46509378113914, -8.472708619900734],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46509378113914, -8.472708619900734)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent10 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/farmaciadaterra.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Farmácia da Terra</b></h3>
+                <p>Farmácia</p>
+            </div>
+        `;
+marker10.bindPopup(popupContent10);
+marker10.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Complexo Desportivo do Bonito -->
+<script>
+    var polygon11 = L.polygon([
+    [39.47553278429423, -8.467915673616014],[39.47553892900341, -8.46716539281466]
+    ,[39.47627226395304, -8.466891809032012],[39.47607674229802, -8.465965846568713]
+    ,[39.47502308838034, -8.466055909778204],[39.474183836766905, -8.466490057644444]
+    ,[39.47308235385636, -8.466535253822911],[39.47253902682859, -8.46679616605239]
+    ,[39.47257006556998, -8.467461853537754],[39.47291149081154, -8.467586949179823]
+    ,[39.47415411694732, -8.467611351119801],[39.47469656691698, -8.467707910640293]
+],
+
+    {
+    color: 'green',
+    fillColor: '#3ce200',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Complexo Desportivo do Bonito</b>").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47453370058551, -8.466976211024177],16.5);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47466279463937, -8.467133574348058)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent11 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/complexodesportivo.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Complexo Desportivo do Bonito</b></h3>
+            </div>
+        `;
+marker11.bindPopup(popupContent11);
+marker11.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Escola Secundária com 3.º Ciclo do Ensino Básico -->
+<script>
+    var polygon12 = L.polygon([
+    [39.46843100530203, -8.477952636683165],[39.46897031792925, -8.478049183268837]
+    ,[39.47031643015678, -8.478745333782223],[39.4707390414149, -8.477434137669633]
+    ,[39.46925249295392, -8.476616248466799],[39.46842290115509, -8.476562717952497]
+],
+
+    {
+    color: 'blue',
+    fillColor: 'blue',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Escola Secundária com</b> <br><b>3.º Ciclo do Ensino Básico</b><br>Escola").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46938354861613, -8.477445323002721],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46860611197738, -8.47789920985127)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent12 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/escolasecundaria.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Escola Secundária com</b> <br><br><b>3.º Ciclo do Ensino Básico</b></h3>
+                <p>Escola</p>
+            </div>
+        `;
+marker12.bindPopup(popupContent12);
+marker12.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Regimento de Manutenção -->
+<script>
+    var polygon13 = L.polygon([
+    [39.46411369598767, -8.475045417311462],[39.46485472423329, -8.475688849121708]
+    ,[39.464946963584794, -8.475985156657577],[39.46328151832989, -8.481459201992513]
+    ,[39.464433427697365, -8.482507717890696],[39.463903484941184, -8.484452615899007]
+    ,[39.46413126784656, -8.484705512851546],[39.464019700802375, -8.485133029128457]
+    ,[39.46369894455411, -8.4854822677772],[39.46294500055632, -8.486088924388321]
+    ,[39.465610195328786, -8.491348399833036],[39.46456656366394, -8.493612184408455]
+    ,[39.46423110729619, -8.493483438362283],[39.46173021264497, -8.491539376225145]
+    ,[39.461674866493674, -8.491257406168627],[39.46177309894179, -8.490253815950224]
+    ,[39.4617772405344, -8.489744196203151],[39.461686125440124, -8.48924530529286]
+    ,[39.46135893843176, -8.48829580322181],[39.460957200375184, -8.487716446015787]
+    ,[39.45972887559506, -8.486638094141096],[39.45950532604715, -8.486280751132108]
+    ,[39.45946842743838, -8.48602745599659],[39.459475807161674, -8.485841069010077]
+    ,[39.45943152881004, -8.485669019484066],[39.45932228794971, -8.485564505989787]
+    ,[39.45925705962118, -8.485246845025927],[39.45927271442531, -8.484706145519011]
+    ,[39.45978701502426, -8.483045886943046]
+],
+
+    {
+    color: '#A83349',
+    fillColor: 'red',
+    fillOpacity: 0.1,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Regimento de Manutenção</b><br>Base Militar").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.462103378935744, -8.482853103494127],14);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46250790172993, -8.478265768824476)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent13 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/regimento.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Regimento de Manutenção</b></h3>
+                <p>Base Militar</p>
+            </div>
+        `;
+marker13.bindPopup(popupContent13);
+marker13.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Colégio Andrade Corvo -->
+<script>
+    var polygon14 = L.polygon([
+    [39.46842376744596, -8.494895921528496],[39.468225911867464, -8.494501371952373]
+    ,[39.46783119892854, -8.494788189011565],[39.46807384662385, -8.495175391888072]
+],
+
+    {
+    color: 'blue',
+    fillColor: 'blue',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Colégio Andrade Corvo</b><br>Escola").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46815524608218, -8.494818682810559],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46815524608218, -8.494818682810559)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent14 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/colegioandrade.png" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Colégio Andrade Corvo</b></h3>
+                <p>Escola</p>
+            </div>
+        `;
+marker14.bindPopup(popupContent14);
+marker14.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Escola Básica do Bonito -->
+<script>
+    var polygon15 = L.polygon([
+    [39.474982839124934, -8.47288642139271],[39.47495796525536, -8.472027249476053]
+    ,[39.47578189117053, -8.471964485406383],[39.475817844084276, -8.473032697792464]
+],
+
+    {
+    color: 'blue',
+    fillColor: 'blue',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Escola Básica do Bonito</b><br>Escola").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47538360570139, -8.472441140908916],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47538360570139, -8.472441140908916)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent15 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/escoladobonito.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Escola Básica do Bonito</b></h3>
+                <p>Escola</p>
+            </div>
+        `;
+marker15.bindPopup(popupContent15);
+marker15.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Bricomarche -->
+<script>
+    var polygon16 = L.polygon([
+      [39.473175, -8.484548], [39.472710, -8.483919]
+      ,[39.473011, -8.483555], [39.473473, -8.484184]
+    ], {
+      color: '#8a2c00',
+      fillColor: '#8a2c00',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Bricomarché</b><br>Loja de Bricolage").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.473048678596506, -8.483997078522751],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47283675347, -8.484105802806676)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent16 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/brico.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Bricomarché</b></h3>
+                <p>Loja de Bricolage</p>
+            </div>
+        `;
+marker16.bindPopup(popupContent16);
+marker16.on('click', zoomToFeature);
+</script>
+
+<!-- Área do E.Leclerc -->
+<script>
+    var polygon17 = L.polygon([
+      [39.474109, -8.486042], [39.474938, -8.485032]
+      ,[39.475335, -8.485663], [39.474548, -8.486728]
+    ], {
+      color: '#8a2c00',
+      fillColor: '#8a2c00',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>E.Leclerc</b><br>Hiper-mercado").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.474712837483175, -8.485802607871442],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47451538791195, -8.486590525658261)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent17 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/eleclerc.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>E.Leclerc</b></h3>
+                <p>Hiper-mercado</p>
+            </div>
+        `;
+marker17.bindPopup(popupContent17);
+marker17.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Aldi -->
+<script>
+    var polygon18 = L.polygon([
+      [39.472582, -8.484451], [39.472346, -8.484745] 
+      ,[39.472366, -8.48479], [39.472266, -8.48490]
+      ,[39.472069, -8.484636], [39.47241, -8.484215]
+    ], {
+      color: '#8a2c00',
+      fillColor: '#8a2c00',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Aldi</b><br>Super-mercado").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47231401179971, -8.484593535894517],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47231099495548, -8.484873331020909)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent18 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/aldi.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Aldi</b></h3>
+                <p>Super-mercado</p>
+            </div>
+        `;
+marker18.bindPopup(popupContent18);
+marker18.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Lidl -->
+<script>
+    var polygon19 = L.polygon([
+      [39.473248, -8.476791], [39.473361, -8.476268]
+      ,[39.4726862,-8.4761008], [39.472647, -8.47654]
+    ], {
+      color: '#8a2c00',
+      fillColor: '#8a2c00',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Lidl</b><br>Super-mercado").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47300996965454, -8.476428211440505],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47322520189707, -8.47670649299607)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent19 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/lidl.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Lidl</b></h3>
+                <p>Super-mercado</p>
+            </div>
+        `;
+marker19.bindPopup(popupContent19);
+marker19.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Pingo Doce -->
+<script>
+    var polygon20 = L.polygon([
+      [39.474483, -8.468357], [39.474083, -8.468361]
+      ,[39.474150, -8.468966], [39.474527, -8.468941]
+    ], {
+      color: '#8a2c00',
+      fillColor: '#8a2c00',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Pingo Doce</b><br>Super-mercado").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47432612923494, -8.468648248425879],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47426768986037, -8.468339942825995)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent20 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/pingodoce.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Pingo Doce</b></h3>
+                <p>Super-mercado</p>
+            </div>
+        `;
+marker20.bindPopup(popupContent20);
+marker20.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Pavilhão Desportivo Municipal -->
+<script>
+    var polygon21 = L.polygon([
+      [39.47101939956494, -8.468664921129228], [39.47103182269023, -8.467895127264823]
+      ,[39.47030092510583, -8.467838800881744], [39.47028850185111, -8.468611276957311]
+    ], {
+      color: 'green',
+      fillColor: '#3ce200',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Pavilhão Desportivo Municipal</b><br>Complexo Desportivo").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47062642657866, -8.468200133444856],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47062642657866, -8.468200133444856)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent21 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/pavilhao.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Pavilhão Desportivo Municipal</b></h3>
+                <p>Complexo Desportivo</p>
+            </div>
+        `;
+marker21.bindPopup(popupContent21);
+marker21.on('click', zoomToFeature);
+</script>
+
+<!-- Área das Piscinas Municipais -->
+<script>
+    var polygon22 = L.polygon([
+      [39.4772538365075, -8.466180921808458], [39.47725519418859, -8.465370040676628]
+      ,[39.47682256230094, -8.465365834847942], [39.47681454435167, -8.46595050184759]
+      ,[39.47690994618421, -8.466178573766758], [39.47695763102677, -8.466178934962057]
+      ,[39.47703083330054, -8.466273018636508], [39.477113331008844, -8.466178182292662]
+    ], {
+      color: '#5A9791',
+      fillColor: '#81D8D0',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Piscinas Municipais</b>").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.477033360370086, -8.465753928370274],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47703150371152, -8.466178018841735)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent22 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/piscinas.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Piscinas Municipais</b></h3>
+            </div>
+        `;
+marker22.bindPopup(popupContent22);
+marker22.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Bonito by Trincanela -->
+<script>
+    var polygon23 = L.polygon([
+      [39.4779212307821, -8.466083874603775], [39.47800926250189, -8.465972315298844]
+      ,[39.4781352712166, -8.465761335286675], [39.478225621467246, -8.465582691676873]
+      ,[39.4782389606834, -8.465585908295306], [39.47826794496456, -8.465523546938426]
+      ,[39.47819332667431, -8.465461267270914], [39.478050138399226, -8.465353509091559]
+      ,[39.47787275411233, -8.465280150987871], [39.477857076346474, -8.465476096247276]
+      ,[39.4778252968008, -8.465488790099544], [39.47784651756232, -8.465584679064763]
+      ,[39.47786256252416, -8.465581326311003], [39.477867220738155, -8.465592725698476]
+      ,[39.47782943743779, -8.465612842264608], [39.47785428125419, -8.465730188909161]
+      ,[39.47789931064852, -8.465715436760666], [39.477901009135195, -8.465962206247985]
+      ,[39.47791653650542, -8.465962206247985]
+    ], {
+      color: '#edb500',
+      fillColor: '#edb500',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Bonito by Trincanela</b><br>Restaurante - Edifício Muncipal").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47797336362563, -8.465614090087172],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47788392902271, -8.465721477990781)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent23 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/trincanela.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Bonito by Trincanela</b></h3>
+                <p>Restaurante - Edifício Muncipal</p>
+            </div>
+        `;
+marker23.bindPopup(popupContent23);
+marker23.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Lar Fernando Eiró Gomes -->
+<script>
+    var polygon24 = L.polygon([
+      [39.4683669307109, -8.470605406912055], [39.46768826975847, -8.470655083094524]
+      ,[39.46771810473856, -8.471358553750948], [39.468392441918645, -8.471303764185837]
+    ], {
+      color: '#5a9791',
+      fillColor: '#5a9791',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Lar Fernando Eiró Gomes</b><br>Lar de Idosos").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46805079745097, -8.470948660009103],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.468121729679964, -8.470596077068652)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent24 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/outrolar.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Lar Fernando Eiró Gomes</b></h3>
+                <p>Lar de Idosos</p>
+            </div>
+        `;
+marker24.bindPopup(popupContent24);
+marker24.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Associação dos Lares Ferroviários -->
+<script>
+    var polygon25 = L.polygon([
+      [39.47162813539421, -8.481398174297208], [39.47080912842314, -8.482809559459096]
+      ,[39.470843514816096, -8.48286039399723], [39.470871558336114, -8.48293558502114]
+      ,[39.47088264530601, -8.482982896227197], [39.4708852540048, -8.483019224484094]
+      ,[39.47087547138476, -8.483118915953998], [39.47089047140174, -8.48321522806467]
+      ,[39.47089699314718, -8.483323367964225], [39.47163848165277, -8.48434982669042]
+      ,[39.473067135639134, -8.483267708117754], [39.47303785490583, -8.482803987440276]
+      ,[39.47306420756647, -8.482785021360234], [39.47303936509602, -8.482202715646132]
+      ,[39.472382222417146, -8.482077285405873]
+    ], {
+      color: '#5a9791',
+      fillColor: '#5a9791',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Associação dos Lares Ferroviários</b><br>Lar de Idosos").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47179828746265, -8.482825937659465],17);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47087972394435, -8.483145703920355)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent25 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/larferroviarios.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Associação dos Lares Ferroviários</b></h3>
+                <p>Lar de Idosos</p>
+            </div>
+        `;
+marker25.bindPopup(popupContent25);
+marker25.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Largo Casal do Saldanha -->
+<script>
+    var polygon26 = L.polygon([
+      [39.47028053549337, -8.479850062267976], [39.47056645474244, -8.479994631641187]
+      ,[39.470488057646776, -8.480235978848992], [39.47020213807874, -8.480079461600367]
+    ], {
+      color: 'green',
+      fillColor: '#3ce200',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Largo Casal do Saldanha</b><br>Campo de Futebol/Basquetebol").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.470350777983676, -8.480013201572927],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.470350777983676, -8.480013201572927)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent26 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/campoazul.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Largo Casal do Saldanha</b></h3>
+                <p>Campo de Futebol/Basquetebol</p>
+            </div>
+        `;
+marker26.bindPopup(popupContent26);
+marker26.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Jardim da Rua Comunidades Europeias -->
+<script>
+    var polygon27 = L.polygon([
+      [39.469736039986124, -8.479467015155711], [39.469058134019186, -8.479087716614199]
+      ,[39.46902086357953, -8.479149407416996], [39.46929146393363, -8.479739618718991]
+      ,[39.46959929268956, -8.479887875883817]
+    ], {
+      color: 'green',
+      fillColor: '#3ce200',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Jardim da Rua Comunidades Europeias</b><br>Jardim").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46938342154872, -8.479491399337057],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46938342154872, -8.479491399337057)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent27 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/jardimpertodaescola.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Jardim da Rua </b><br><br><b> Comunidades Europeias</b></h3>
+                <p>Jardim</p>
+            </div>
+        `;
+marker27.bindPopup(popupContent27);
+marker27.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Segurança Social -->
+<script>
+    var polygon28 = L.polygon([
+      [39.47141124764045, -8.47376823679724], [39.47108257399286, -8.473811878642294]
+      ,[39.47109060585709, -8.47343388611501], [39.471393653587114, -8.47344910229555]
+    ], {
+      color: '#5a9791',
+      fillColor: '#5a9791',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Segurança Social</b><br>Departamento Governamental do Estado").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47123538219335, -8.473616070699624],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47139314292278, -8.473592496334463)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent28 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/segurancasocial.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Segurança Social</b></h3>
+                <p>Departamento Governamental do Estado</p>
+            </div>
+        `;
+marker28.bindPopup(popupContent28);
+marker28.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Sede da Freguesia -->
+<script>
+    var polygon29 = L.polygon([
+      [39.47141124764045, -8.473769301232483], [39.47107764387632, -8.473811878642294]
+      ,[39.471074145063454, -8.474072235579259], [39.47142624221431, -8.474053418845811]
+    ], {
+      color: '#5a9791',
+      fillColor: '#5a9791',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Sede da Freguesia</b><br>Organismo Público Local").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.4712359837901, -8.473899862044052],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.471389717165145, -8.473893074549586)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+var popupContent29 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/junta.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Sede da Freguesia</b></h3>
+                <p>Organismo Público Local</p>
+            </div>
+        `;
+marker29.bindPopup(popupContent29);
+marker29.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Universidade Sénior -->
+<script>
+    var polygon30 = L.polygon([
+      [39.46879677370673, -8.473245148346455], [39.46880909210325, -8.473589111956864]
+      ,[39.46917690825198, -8.473553376345837], [39.46917211778764, -8.473214731745902]
+    ], {
+      color: 'blue',
+      fillColor: 'blue',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Universidade Sénior</b><br>Universidade").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46899175023465, -8.47338571705738],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.46898839296421, -8.473232464179581)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent30 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/universidadesenior.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Universidade Sénior</b></h3>
+                <p>Universidade</p>
+            </div>
+        `;
+marker30.bindPopup(popupContent30);
+marker30.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Associação Filarmónica e Cultural -->
+<script>
+    var polygon31 = L.polygon([
+      [39.46879677370673, -8.473245148346455], [39.46880909210325, -8.473589111956864]
+      ,[39.46865025865842, -8.473571088704444], [39.46863524686797, -8.473255929168403]
+    ], {
+      color: 'blue',
+      fillColor: 'blue',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Associação Filarmónica e Cultural</b><br>Escola de Música").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46870838666196, -8.473398662213548],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.468710305787205, -8.473250564731753)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent31 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/escolademusica.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Associação Filarmónica e Cultural</b></h3>
+                <p>Escola de Música</p>
+            </div>
+        `;
+marker31.bindPopup(popupContent31);
+marker31.on('click', zoomToFeature);
+</script>
+
+<!-- Área da ESER -->
+<script>
+    var polygon32 = L.polygon([
+      [39.47163122728913, -8.481396275609466], [39.47233323614641, -8.48203030357364]
+      ,[39.472791006697236, -8.482154198983878], [39.472758495559226, -8.481455300875954]
+      ,[39.47268706433143, -8.481459324189181], [39.47268128415213, -8.481310623692682]
+      ,[39.47274747615436, -8.481306874370956], [39.47271435881082, -8.480784521792677]
+      ,[39.47263650394049, -8.48079204848663], [39.47230836295523, -8.480495632818918]
+      ,[39.47206749191395, -8.48094205058564], [39.47223675664019, -8.481088942649482]
+      ,[39.472157034135385, -8.481244568449581], [39.47199004491668, -8.481100493338273]
+      ,[39.47186128794889, -8.481337054058093], [39.471808727570576, -8.48137065332233]
+      ,[39.47175394561676, -8.48136473942255], [39.471672424772294, -8.481311514324531]
+    ], {
+      color: 'blue',
+      fillColor: 'blue',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>ESER - Escola de Segurança</b><br><b>& Educação Rodoviária</b><br>Escola").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.472279349659004, -8.481199640612632],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47215900495609, -8.481148646991153)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent32 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/escolaeser.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>ESER - Escola de Segurança</b><br><br><b>& Educação Rodoviária</b></h3>
+                <p>Escola</p>
+            </div>
+        `;
+marker32.bindPopup(popupContent32);
+marker32.on('click', zoomToFeature);
+</script>
+
+<!-- Área da Câmara Municipal -->
+<script>
+    var polygon33 = L.polygon([
+      [39.46552992412835, -8.46826405186973], [39.4654756884973, -8.46797665434164]
+      ,[39.465243596280246, -8.46805581248942], [39.46530655689671, -8.468347890134122]
+    ], {
+      color: '#5a9791',
+      fillColor: '#5a9791',
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(this.map).bindPopup("<b>Câmara Municipal</b><br>Município do Entroncamento").openPopup();
+
+    var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.46537653103154, -8.468151849095172],18);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.465282167049786, -8.468186778999636)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent33 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/camara.png" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Câmara Municipal</b></h3>
+                <p>Município do Entroncamento</p>
+            </div>
+        `;
+marker33.bindPopup(popupContent33);
+marker33.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Jardim José Afonso -->
+<script>
+    var polygon34 = L.polygon([
+    [39.47128397149314, -8.47806468034429],[39.47112273938899, -8.478597499176633]
+    ,[39.470866083434146, -8.478448309914208],[39.471016347932846, -8.477962379173736]
+],
+
+    {
+    color: 'green',
+    fillColor: '#3ce200',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Jardim José Afonso</b><br>Jardim").openPopup();
+
+// Função para zoom e rota
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47104922019409, -8.478243857079173], 17);
+
+    if (userLocation.latlng) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47104922019409, -8.478243857079173)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent34 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/jardimjose.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Jardim José Afonso</b></h3>
+                <p>Jardim</p>
+            </div>
+        `;
+marker34.bindPopup(popupContent34);
+marker34.on('click', zoomToFeature);
+</script>
+
+<!-- Área do Parque Empresarial -->
+<script>
+    var polygon35 = L.polygon([
+    [39.45768723217836, -8.488165089238741],[39.45293573925125, -8.493114641752703]
+    ,[39.45002613540748, -8.489854612340643],[39.45603759410056, -8.484419006492304]
+    ,[39.45707899856271, -8.485984558376167],[39.456554844295084, -8.486513720725823]
+],
+
+    {
+    color: '#E5AB00',
+    fillColor: 'yellow',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Parque Empresarial</b>").openPopup();
+
+// Função para zoom e rota
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.45410351589417, -8.488826637129408], 15);
+
+    if (userLocation.latlng) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.45410351589417, -8.488826637129408)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent35 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/parquemepresarial.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Parque Empresarial</b></h3>
+            </div>
+        `;
+marker35.bindPopup(popupContent35);
+marker35.on('click', zoomToFeature);
+</script>
+
+<!-- Área da SCME -->
+<script>
+    var polygon36 = L.polygon([
+    [39.479095730202275, -8.472337865420451],[39.4784920186089, -8.472352622999006]
+    ,[39.478558465110055, -8.473228239326664],[39.479071050271315, -8.473078203944677]
+],
+
+    {
+    color: 'green',
+    fillColor: '#3ce200',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>SCME - Unidade Cuidados<br> Continuados Integrados</b><br>Hospital Especializado").openPopup();
+
+// Função para zoom e rota
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.47881475816284, -8.472753537216445], 17);
+
+    if (userLocation.latlng) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.47906915181471, -8.4732602140802)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent36 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="images/scme.png" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>SCME - Unidade Cuidados<br><br> Continuados Integrados</b></h3>
+                <p>Hospital Especializado</p>
+            </div>
+        `;
+marker36.bindPopup(popupContent36);
+marker36.on('click', zoomToFeature);
+</script>
+
+<!-- Camadas -->
+<script>  
+    // Cria camadas de marcadores
+    var parques = L.layerGroup([marker1, marker5, marker4, polygon1, polygon5, polygon4, marker27, polygon27, marker34, polygon34]);
+    var museus = L.layerGroup([marker3, polygon3]);
+    var igrejas = L.layerGroup([marker2, polygon2]);
+    var escolas = L.layerGroup([polygon12, marker12, polygon14, marker14, polygon15, marker15, marker30, marker31, marker32, polygon30, polygon31, polygon32]);
+    var zonaI = L.layerGroup([marker6, polygon6]);
+    var regimento = L.layerGroup([marker13, polygon13]);
+    var desporto = L.layerGroup([marker22,polygon22,marker1, polygon1, marker11, marker21, marker26, polygon11, polygon21, polygon26]);
+    var mercados = L.layerGroup([marker16, marker17, marker18, marker19, marker20, polygon16, polygon17, polygon18, polygon19, polygon20]);
+    var restaurantes = L.layerGroup([marker23, polygon23]);
+    var lares = L.layerGroup([marker24, marker25, polygon24, polygon25]);
+    var saude = L.layerGroup([marker7, marker9, marker10, polygon7, marker36, polygon36]);
+    var sede = L.layerGroup([marker29, polygon29]);
+    var segsocial = L.layerGroup([marker28, polygon28]);
+    var camara = L.layerGroup([marker33, polygon33]);
+    var empresarial = L.layerGroup([marker35, polygon35]);
+
+    // Define os grupos de camadas para o controle de camadas
+    var overlayMaps = {
+        "Nª Srª de Fátima": polygonF,
+        "S. João Baptista": polygonS,
+        "Câmara Municipal": camara,
+        "Segurança Social": segsocial,
+        "Sede da Freguesia": sede,
+        "Regimento de Manutenção": regimento,
+        "Zona Industrial": zonaI,
+        "Parques / Jardins": parques,
+        "Museu": museus,
+        "Igrejas": igrejas,
+        "Escolas / Ensino": escolas,
+        "Desporto / Atividade Física": desporto,
+        "Zonas de Comércio": mercados,
+        "Restaurantes": restaurantes,
+        "Lares": lares,
+        "Saúde": saude,
+        "Parque Empresarial": empresarial
+    };
+
+    // Adiciona o controle de camadas ao mapa
+    var layerControl = L.control.layers(null, overlayMaps).addTo(map);
+
+    // Seleciona as camadas por padrão
+    map.addLayer(parques);
+    map.addLayer(museus);
+    map.addLayer(igrejas);
+    map.addLayer(escolas);
+    map.addLayer(desporto);
+    map.addLayer(mercados);
+    map.addLayer(restaurantes);
+    map.addLayer(lares);
+    map.addLayer(saude);
+    map.addLayer(regimento);
+    map.addLayer(zonaI);
+    map.addLayer(sede);
+    map.addLayer(segsocial);
+    map.addLayer(camara);
+    map.addLayer(empresarial);
+    map.removeLayer(polygonS);
+
+    // Adicione um flag para controlar a visibilidade da rota
+let routesVisible = true;
+
+// Função para controlar a visibilidade das rotas
+document.getElementById('toggleRoutesControl').addEventListener('click', function() {
+    if (routesVisible) {
+        // Remove todas as instâncias de controle de rotas existentes
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routesVisible = false; // Define a flag como false indicando que as rotas estão escondidas
+    } else {
+        // Adiciona novamente todas as rotas
+        routingControls.forEach(function(control) {
+            control.addTo(map);
+        });
+        routesVisible = true; // Define a flag como true indicando que as rotas estão visíveis
+    }
+});
+
+
+// Objeto para rastrear quais camadas estão ativas
+var activeLayers = {};
+</script>
+
+<!-- Função para controlar a visibilidade dos marcadores de acordo com o nível de zoom -->
+<script>
+function updateMarkersVisibility() {
+    var currentZoom = map.getZoom();
+
+    // Verifica cada camada e ajusta a visibilidade dos marcadores
+    if (activeLayers["Parques / Jardins"]) {
+        if (currentZoom >= 15) {
+            if (!map.hasLayer(marker1)) map.addLayer(marker1);
+            if (!map.hasLayer(marker5)) map.addLayer(marker5);
+            if (!map.hasLayer(marker27)) map.addLayer(marker27);
+            if (!map.hasLayer(marker34)) map.addLayer(marker34);
+        } else {
+            if (map.hasLayer(marker1)) map.removeLayer(marker1);
+            if (map.hasLayer(marker5)) map.removeLayer(marker5);
+            if (map.hasLayer(marker27)) map.removeLayer(marker27);
+            if (map.hasLayer(marker34)) map.removeLayer(marker34);
+        }
+    }
+
+    if (activeLayers["Igrejas"]) {
+        if (currentZoom >= 14) {
+            if (!map.hasLayer(marker2)) map.addLayer(marker2);
+        } else {
+            if (map.hasLayer(marker2)) map.removeLayer(marker2);
+        }
+    }
+
+    if (activeLayers["Escolas / Ensino"]) {
+        if (currentZoom >= 15) {
+            if (!map.hasLayer(marker30)) map.addLayer(marker30);
+        } else {
+            if (map.hasLayer(marker30)) map.removeLayer(marker30);
+        }
+
+        if (currentZoom >= 16) {
+            if (!map.hasLayer(marker31)) map.addLayer(marker31);
+        } else {
+            if (map.hasLayer(marker31)) map.removeLayer(marker31);
+        }
+    }
+
+    if (activeLayers["Desporto / Atividade Física"]) {
+        if (currentZoom >= 14) {
+            if (!map.hasLayer(marker22)) map.addLayer(marker22);
+            if (!map.hasLayer(marker26)) map.addLayer(marker26);
+        } else {
+            if (map.hasLayer(marker22)) map.removeLayer(marker22);
+            if (map.hasLayer(marker26)) map.removeLayer(marker26);
+        }
+
+        if (currentZoom >= 15) {
+            if (!map.hasLayer(marker1)) map.addLayer(marker1);
+        } else {
+            if (map.hasLayer(marker1)) map.removeLayer(marker1);
+        }
+    }
+
+    if (activeLayers["Zonas Comércio"]) {
+        if (currentZoom >= 14) {
+            if (!map.hasLayer(marker17)) map.addLayer(marker17);
+            if (!map.hasLayer(marker18)) map.addLayer(marker18);
+            if (!map.hasLayer(marker19)) map.addLayer(marker19);
+            if (!map.hasLayer(marker20)) map.addLayer(marker20);
+        } else {
+            if (map.hasLayer(marker17)) map.removeLayer(marker17);
+            if (map.hasLayer(marker18)) map.removeLayer(marker18);
+            if (map.hasLayer(marker19)) map.removeLayer(marker19);
+            if (map.hasLayer(marker20)) map.removeLayer(marker20);
+        }
+
+        if (currentZoom >= 15) {
+            if (!map.hasLayer(marker16)) map.addLayer(marker16);
+        } else {
+            if (map.hasLayer(marker16)) map.removeLayer(marker16);
+        }
+    }
+
+    if (activeLayers["Restaurantes"]) {
+        if (currentZoom >= 15) {
+            if (!map.hasLayer(marker23)) map.addLayer(marker23);
+        } else {
+            if (map.hasLayer(marker23)) map.removeLayer(marker23);
+        }
+    }
+
+    if (activeLayers["Lares"]) {
+        if (currentZoom >= 15) {
+            if (!map.hasLayer(marker24)) map.addLayer(marker24);
+            if (!map.hasLayer(marker25)) map.addLayer(marker25);
+        } else {
+            if (map.hasLayer(marker24)) map.removeLayer(marker24);
+            if (map.hasLayer(marker25)) map.removeLayer(marker25);
+        }
+    }
+
+    if (activeLayers["Saúde"]) {
+        if (currentZoom >= 15) {
+            if (!map.hasLayer(marker9)) map.addLayer(marker9);
+            if (!map.hasLayer(marker10)) map.addLayer(marker10);
+        } else {
+            if (map.hasLayer(marker9)) map.removeLayer(marker9);
+            if (map.hasLayer(marker10)) map.removeLayer(marker10);
+        }
+    }
+
+    if (activeLayers["Segurança Social"]) {
+        if (currentZoom >= 16) {
+            if (!map.hasLayer(marker28)) map.addLayer(marker28);
+        } else {
+            if (map.hasLayer(marker28)) map.removeLayer(marker28);
+        }
+    }
+}
+
+map.on('overlayadd', function(eventLayer) {
+    activeLayers[eventLayer.name] = true;
+    updateMarkersVisibility();
+});
+
+map.on('overlayremove', function(eventLayer) {
+    activeLayers[eventLayer.name] = false;
+    updateMarkersVisibility();
+});
+
+map.on('zoomend', function() {
+    updateMarkersVisibility();
+});
+
+
+// Chama a função para garantir que os marcadores estejam corretamente visíveis
+updateMarkersVisibility();
+</script>
+
+<!-- Função para atualizar a opacidade dos marcadores com base no nível de zoom -->
+<script>
+function updateMarkerOpacity() {
+    var currentZoom = map.getZoom();
+    var opacityFactor = currentZoom * 1.175 / map.getMaxZoom(); // A opacidade aumenta com o nível de zoom
+
+    // atualiza a opacidade
+    markers.forEach(function(marker) {
+        marker.setOpacity(opacityFactor);
+    });
+}
+
+map.on('zoomend', function() {
+    updateMarkerOpacity();
+});
+
+// Chama a função
+updateMarkerOpacity();
+</script>
+
+<!--Função para zoom à localização do utilizador e abrir o popup -->
+<script>
+function zoomToLocation(latlng) {
+  if (latlng) {
+    userLocation.marker.openPopup();
+    map.setView(latlng, 18);
+  }
+}
+
+// Event listener para o botão
+document.getElementById('btnZoomToLocation').addEventListener('click', function() {
+  zoomToLocation(userLocation.latlng);
+});
+</script>

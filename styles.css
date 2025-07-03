@@ -1,0 +1,65 @@
+#map{
+    height: 100vh;
+    width: 100%;
+}
+body {
+    padding: 0;
+    margin: 0;
+}
+html, body, #map {
+    height: 100%;
+    width: 100vw;
+}
+#toggleRoutesControl {
+    position:absolute;
+    top: 62px;
+    right: 67px;
+    z-index: 500;
+    background: rgb(255, 255, 255);
+    border-radius: 5px;
+    padding: 9px;
+    cursor: pointer;
+    border: 2px solid rgba(0, 0, 0, 0.322);
+    border-radius: 5px;
+}
+#btnZoomToLocation {
+    position:absolute;
+    top: 93px;
+    left: 14px;
+    z-index: 500;
+    background: rgb(255, 255, 255);
+    border-radius: 5px;
+    padding: 4px;
+    cursor: pointer;
+    border: 2px solid rgba(0, 0, 0, 0.322);
+    border-radius: 5px;
+}
+#btnZoomToLocation img {
+    width: 25px; /* Largura da imagem */
+    height: 25px; /* Altura da imagem */
+}
+.leaflet-bar {
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+.leaflet-bar input[type="text"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-right: 5px;
+    width: 150px;
+    border-radius: 5px;
+}
+.leaflet-bar button {
+    border: 1px solid #0078A8;
+    background-color: #0078A8;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.leaflet-bar button:hover {
+    background-color: #005682;
+}
