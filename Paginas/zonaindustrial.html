@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pontos De Interesse</title>
+
+    <!-- Incluir o código css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <!-- Incluir o código JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<!-- Link do CDN do Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Estilo do mapa -->
+    <style>
+        #map{
+            height: 100vh;
+            width: 100%;
+        }
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100vw;
+        }
+        #toggleRoutesControl {
+            position:absolute;
+            top: 62px;
+            right: 67px;
+            z-index: 500;
+            background: rgb(255, 255, 255);
+            border-radius: 5px;
+            padding: 9px;
+            cursor: pointer;
+            border: 2px solid rgba(0, 0, 0, 0.322);
+            border-radius: 5px;
+        }
+        #btnZoomToLocation {
+            position:absolute;
+            top: 93px;
+            left: 14px;
+            z-index: 500;
+            background: rgb(255, 255, 255);
+            border-radius: 5px;
+            padding: 4px;
+            cursor: pointer;
+            border: 2px solid rgba(0, 0, 0, 0.322);
+            border-radius: 5px;
+        }
+        #btnZoomToLocation img {
+            width: 25px; /* Largura da imagem */
+            height: 25px; /* Altura da imagem */
+        }
+        .leaflet-bar {
+            background-color: white;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        .leaflet-bar input[type="text"] {
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin-right: 5px;
+            width: 150px;
+            border-radius: 5px;
+        }
+        .leaflet-bar button {
+            border: 1px solid #0078A8;
+            background-color: #0078A8;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .leaflet-bar button:hover {
+            background-color: #005682;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+</head>
+<body>
+    <!-- div com o id map -->
+    <div id="map"></div>
+    <button id="toggleRoutesControl"><i class="fa-solid fa-route" style="color: #000000; font-size: 25px;"></i></button>
+    <button id="btnZoomToLocation"><img src="../images/pessoa_icon-removebg-preview.png"></button>
+</body>
+</html>
+
+<!-- Criação do mapa -->
+<script>
+    // Define os limites da visualização do mapa
+    var southWest = L.latLng(39.43211982527226, -8.511630700569013); // Coordenada do sudoeste
+    var northEast = L.latLng(39.501296069292856, -8.442622829123167); // Coordenada do nordeste
+    var bounds = L.latLngBounds(southWest, northEast);
+
+    var map = L.map('map', {
+    maxBounds: bounds, // Limites de visualização
+    maxBoundsViscosity: 0.2 // Controle de quão pegajosos são os limites
+}).locate({setView: true, maxZoom: 14});
+
+    map.createPane('labels');
+    map.getPane('labels').style.zIndex = 650;
+    map.getPane('labels').style.pointerEvents = 'none';
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    minZoom: 13,
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// Função de pesquisa de geocodificação restrita ao Entroncamento
+function searchInEntroncamento(query) {
+    var apiUrl = 'https://nominatim.openstreetmap.org/search';
+    var params = {
+        q: query + ', Entroncamento, Portugal',
+        format: 'json',
+        addressdetails: 1,
+        limit: 1
+    };
+
+    // Verifica se o marcador existe na lista de marcadores
+    var foundMarker = markers.find(marker => marker.getPopup().getContent().toLowerCase().includes(query.toLowerCase()));
+    if (foundMarker) {
+        map.setView(foundMarker.getLatLng(), 18);
+        foundMarker.openPopup();
+        return;
+    }
+
+    // Realiza a requisição AJAX para a API do Nominatim
+    fetch(apiUrl + '?' + new URLSearchParams(params))
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.length > 0) {
+                var result = data[0];
+                var lat = result.lat;
+                var lon = result.lon;
+                map.setView([lat, lon], 17);
+            } else {
+                alert('Nenhum resultado encontrado para "' + query + '" no Entroncamento.');
+            }
+        })
+        .catch(function(error) {
+            console.error('Erro na pesquisa:', error);
+        });
+}
+
+// Cria um controle personalizado de geocodificação
+var searchControl = L.Control.extend({
+    onAdd: function(map) {
+        var container = L.DomUtil.create('div', 'leaflet-bar');
+
+        var input = L.DomUtil.create('input', '', container);
+        input.type = 'text';
+        input.placeholder = 'Pesquisar rua ou local...';
+
+        // Botão de pesquisa
+        var button = L.DomUtil.create('button', '', container);
+        button.innerHTML = 'Pesquisar';
+        button.onclick = function() {
+            searchInEntroncamento(input.value);
+        };
+
+        return container;
+    }
+});
+
+// Adiciona o controle personalizado ao mapa
+map.addControl(new searchControl({ position: 'topright' }));
+</script>
+
+<!-- Icon do utilizador -->
+<script>
+var customIcon = L.icon({
+    iconUrl: '../images/pessoa_icon-removebg-preview.png',
+    iconSize: [25, 25],
+    iconAnchor: [13, 27],
+    popupAnchor: [0, -30]
+});
+
+var userLocation = {
+    marker: null,
+    circle: null,
+    latlng: null
+};
+
+var firstTimeLocationFound = true;
+
+
+function onLocationFound(e) {
+    if (userLocation.marker) {
+        map.removeLayer(userLocation.marker);
+    }
+    if (userLocation.circle) {
+        map.removeLayer(userLocation.circle);
+    }
+
+    userLocation.marker = L.marker(e.latlng, { icon: customIcon }).addTo(map)
+        .bindPopup("<b>Estás aqui</b>");
+
+    userLocation.circle = L.circle(e.latlng, {
+        weight: 3,
+        color: 'blue',
+        fillColor: 'blue',
+        fillOpacity: 0.3,
+        radius: 25
+    }).addTo(map);
+
+    userLocation.latlng = e.latlng;
+
+    if (firstTimeLocationFound) {
+        map.setView(e.latlng, 16);
+        firstTimeLocationFound = false;
+    }
+
+}
+
+map.on('locationfound', onLocationFound);
+
+map.locate({ setView: false, maxZoom: 16, watch: true });
+
+userLocation.marker.openPopup();
+</script>
+
+<!-- Mensagem de erro -->
+<script>
+    function onLocationError(e) {
+    alert(e.message);
+}
+
+map.on('locationerror', onLocationError);
+</script>
+
+<!-- Ícons do mapa -->
+<script>
+//estilos dos  icons
+var customIcon6 = L.icon({
+    iconUrl: '../images/zonaindustrial_icon.png',
+    iconSize: [30, 40],
+    iconAnchor: [16, 40],
+    popupAnchor: [-1, -40]
+});
+
+// localizações e popups
+var markers = [
+marker6 = L.marker([39.45904359036051, -8.49527723499912], {icon: customIcon6}).addTo(map).bindPopup("<b>Zona Industrial</b>").openPopup()
+];
+</script>
+
+<!-- Área da freguesia de S. João Baptista -->
+<script>
+    var polygonS = L.polygon([
+    [39.4906708251402, -8.456848592758515],[39.49075282175005, -8.45681246240807],
+    [39.490707485602364, -8.456627871813865],[39.490614358356325, -8.456504808613449],
+    [39.49055165875148, -8.4565920281613],[39.490179148178925, -8.456652962366935],
+    [39.49009155257839, -8.456636235327226],[39.48972430757696, -8.456422186497269],
+    [39.48940553231972, -8.455909884564303],[39.489202674573086, -8.455708718876373],
+    [39.48894806656967, -8.455655074694945],[39.488154020905746, -8.455879006115811],
+    [39.48771519540685, -8.456619157560384],[39.48742931642178, -8.456925714944118],
+    [39.48625426426489, -8.457570429943143],[39.484919035765, -8.457838062506283],
+    [39.48441001925126, -8.458191719823734],[39.483923130415974, -8.458306419491459],
+    [39.48357640445901, -8.458535818830738],[39.48277228869305, -8.458612285272686],
+    [39.48228538837396, -8.458382885926046],[39.48070662755909, -8.460676879364016],
+    [39.48009626834188, -8.461069328725184],[39.4795872165324, -8.462636890876976],
+    [39.47818546040802, -8.4641375448915],[39.47742554923134, -8.463697862823565],
+    [39.47655242935235, -8.463515261303453],[39.475538523112725, -8.463828001777433],
+    [39.474994520963705, -8.463943973005374],[39.47432107959801, -8.463966732304296],
+    [39.47393457987481, -8.464300535340229],[39.47243540907319, -8.464543301209414],
+    [39.47118217120845, -8.4638301765123],[39.470104602831995, -8.463906040839408],
+    [39.46895088343484, -8.463815003654641],[39.4675863073425, -8.464550887639517],
+    [39.4666902406851, -8.463640515702528],[39.466286128424166, -8.46354947851091],
+    [39.466192420892135, -8.463314299084503],[39.46543689935284, -8.46266186587791],
+    [39.46431824383681, -8.462419100003139],[39.46373841008223, -8.461759080357313],
+    [39.46344556291087, -8.462100469823085],[39.456294828380265, -8.461440619222373],
+    [39.453807990449334, -8.462134254980294],[39.44494024750945, -8.469825031838502],
+    [39.44245619413027, -8.473587902172232],[39.439597079665795, -8.484876512692077],
+    [39.44303024913843, -8.491664327135275],[39.44348323904399, -8.49276507869091],
+    [39.45423788582084, -8.481715995482006],[39.46397718059705, -8.471494787509142],
+    [39.46690378720398, -8.468677060798267],[39.47847924116704, -8.46443128158551],
+    [39.479466091914986, -8.46385707918079],[39.483178539874054, -8.46020856896017],
+    [39.48515021577941, -8.458948277464797]
+],
+
+    {
+    color: '#302e2f ',
+    fillColor: 'red',
+    dashArray: '6',
+    fillOpacity: 0.2
+    }
+).addTo(map)
+</script>
+
+<!-- Área da freguesia de Nª Srª de Fátima -->
+<script>
+    var polygonF = L.polygon([
+    [39.44348323904399, -8.49276507869091],[39.44428409106051, -8.494951294345933],
+    [39.450611056091006, -8.498289324350415],
+    [39.45389147828391, -8.498410707257525],[39.45684372611096, -8.497561026897587],
+    [39.458811821757514, -8.497439643990475],[39.460873576561674, -8.498532090154484],
+    [39.46212603688545, -8.497953156037784],[39.46219486635611, -8.498544904327455],
+    [39.46363205939935, -8.498933246181732],[39.46485792715518, -8.499619891638197],
+    [39.46633225308428, -8.495950629975184],[39.46752494334544, -8.498117854735936],
+    [39.4677402880085, -8.49786036268976],[39.46820671270561, -8.498465556912839],
+    [39.4690506076797, -8.497534360082641],[39.47332125571974, -8.494851925350158],
+    [39.47571929608479, -8.494216631021335],[39.47670286305209, -8.493403124478876],
+    [39.478201297244766, -8.492521376154027],[39.478702112799944, -8.491412942322215],
+    [39.47769004431293, -8.489547529288188],[39.47782568321005, -8.487276591636313],
+    [39.48038190535728, -8.486884584467129],[39.48270646338799, -8.486977039769618],
+    [39.48234211195485, -8.482385098007573],[39.48499189713064, -8.4820954194056],
+    [39.48704417294681, -8.47548641910053],[39.48588493857245, -8.475228927000991],
+    [39.48508174342464, -8.471581122759764],[39.48681232761902, -8.471334359529674],
+    [39.48766518340408, -8.470722815894744],[39.48874158844587, -8.466098687513586],
+    [39.48906450669371, -8.46618451819919],[39.48961926018241, -8.465540788057158],
+    [39.49011605060386, -8.463244817191033],[39.49100198471347, -8.463523766880469],
+    [39.492432016396684, -8.460858272713889], [39.49177157492835, -8.459548513899186],
+    [39.49159429902678, -8.458546723534656], [39.49115718200437, -8.458127882531386],
+    [39.49086744349764, -8.457122498467697] ,[39.49073243062734, -8.457149715207084],
+    [39.4906708251402, -8.456848592758515],[39.48515021577941, -8.458948277464797],
+    [39.483178539874054, -8.46020856896017],[39.479466091914986, -8.46385707918079],
+    [39.47847924116704, -8.46443128158551],[39.46690378720398, -8.468677060798267],
+    [39.46397718059705, -8.471494787509142],[39.45423788582084, -8.481715995482006]
+],
+
+    {
+    color: '#302e2f',
+    fillColor: 'blue',
+    dashArray: '6',
+    fillOpacity: 0.05
+    }
+).addTo(map)
+</script>
+
+<!-- Área da Zona Industrial -->
+<script>
+    var polygon6 = L.polygon([
+    [39.462008549396536, -8.497734014537786],[39.4602553107363, -8.492364074730899]
+    ,[39.459587005777806, -8.492310642464183],[39.459005327725265, -8.492604519746699]
+    ,[39.45799116250506, -8.493813800254346],[39.45643534404148, -8.494857125372372]
+    ,[39.455511313576636, -8.496964232931125],[39.45579563194113, -8.497670011731094]
+    ,[39.45760076885084, -8.496867663556545],[39.457831817546584, -8.497485469003081]
+    ,[39.458681473896576, -8.497350324061651],[39.46093226783419, -8.49839287075341]
+],
+
+    {
+    color: '#E5AB00',
+    fillColor: 'yellow',
+    fillOpacity: 0.2,
+    weight: 2
+    }
+).addTo(map).bindPopup("<b>Zona Industrial</b>").openPopup();
+
+var routingControls = []; // Variável global para armazenar as instâncias de controle de rotas
+
+function zoomToFeature() {
+    map.setView([39.459023574762966, -8.49526249429081],15);
+
+    if (userLocation) {
+        // Remove todas as instâncias de controle de rotas existentes, se houver
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routingControls = []; // Limpa a lista de controles de rotas
+
+        // Adiciona a primeira rota
+        var control1 = L.Routing.control({
+            language: 'pt-PT',
+            waypoints: [
+                L.latLng(userLocation.latlng.lat, userLocation.latlng.lng),
+                L.latLng(39.459023574762966, -8.49526249429081)
+            ],
+            createMarker: function() { return null; }, // Não criar marcadores
+            lineOptions: {
+                styles: [{color: 'red', opacity: 0.7, weight: 3}] // Estilo da linha da rota principal
+            },
+            show: false, // Não mostrar o popup automaticamente
+        }).addTo(map);
+        routingControls.push(control1);
+    } else {
+        alert("Localização do utilizador não encontrada.");
+    }
+}
+
+var popupContent6 = `
+            <div style="text-align: center; line-height: 0.5">
+                <img src="../images/zonaindustrial.jpeg" alt="Imagem" style="width: 200px; height: auto; border: 1px solid black; border-radius: 5px;">
+                <h3><b>Zona Industrial</b></h3>
+            </div>
+        `;
+marker6.bindPopup(popupContent6);
+marker6.on('click', zoomToFeature);
+</script>
+
+<!-- Camadas -->
+<script>  
+    // Cria camadas de marcadores
+    var zonaI = L.layerGroup([marker6, polygon6]);
+
+    // Define os grupos de camadas para o controle de camadas
+    var overlayMaps = {
+        "Nª Srª de Fátima": polygonF,
+        "S. João Baptista": polygonS,
+        "Zona Industrial": zonaI
+    };
+
+    // Adiciona o controle de camadas ao mapa
+    var layerControl = L.control.layers(null, overlayMaps).addTo(map);
+
+    // Seleciona as camadas por padrão
+    map.addLayer(zonaI);
+    map.removeLayer(polygonS);
+
+    // Adicione um flag para controlar a visibilidade da rota
+let routesVisible = true;
+
+// Função para controlar a visibilidade das rotas
+document.getElementById('toggleRoutesControl').addEventListener('click', function() {
+    if (routesVisible) {
+        // Remove todas as instâncias de controle de rotas existentes
+        routingControls.forEach(function(control) {
+            map.removeControl(control);
+        });
+        routesVisible = false; // Define a flag como false indicando que as rotas estão escondidas
+    } else {
+        // Adiciona novamente todas as rotas
+        routingControls.forEach(function(control) {
+            control.addTo(map);
+        });
+        routesVisible = true; // Define a flag como true indicando que as rotas estão visíveis
+    }
+});
+
+
+// Objeto para rastrear quais camadas estão ativas
+var activeLayers = {};
+</script>
+
+<!-- Função para atualizar a opacidade dos marcadores com base no nível de zoom -->
+<script>
+function updateMarkerOpacity() {
+    var currentZoom = map.getZoom();
+    var opacityFactor = currentZoom * 1.175 / map.getMaxZoom(); // A opacidade aumenta com o nível de zoom
+
+    // atualiza a opacidade
+    markers.forEach(function(marker) {
+        marker.setOpacity(opacityFactor);
+    });
+}
+
+map.on('zoomend', function() {
+    updateMarkerOpacity();
+});
+
+// Chama a função
+updateMarkerOpacity();
+</script>
+
+<!--Função para zoom à localização do utilizador e abrir o popup -->
+<script>
+function zoomToLocation(latlng) {
+  if (latlng) {
+    userLocation.marker.openPopup();
+    map.setView(latlng, 18);
+  }
+}
+
+// Event listener para o botão
+document.getElementById('btnZoomToLocation').addEventListener('click', function() {
+  zoomToLocation(userLocation.latlng);
+});
+</script>
