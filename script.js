@@ -51,7 +51,7 @@ fetch(apiUrl + '?' + new URLSearchParams(params))
             var lon = result.lon;
             map.setView([lat, lon], 17);
         } else {
-            alert('Nenhum resultado encontrado para "' + query + '" no Entroncamento.');
+            showToast('Nenhum resultado encontrado para "' + query + '" no Entroncamento.');
         }
     })
     .catch(function(error) {
@@ -74,7 +74,7 @@ var searchControl = L.Control.extend({
         button.onclick = function() {
             var query = input.value.trim(); // remove espaços no início/fim
             if (query === "") {
-                alert("Por favor, introduz um termo de pesquisa.");
+                showToast("Por favor, introduz um termo de pesquisa.");
                 return;
             }
             searchInEntroncamento(query);
