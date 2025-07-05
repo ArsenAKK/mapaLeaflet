@@ -142,6 +142,6 @@ map.on('locationerror', onLocationError);
 map.locate({
     setView: false,
     maxZoom: 16,
-    watch: true,
+    watch: false,
     timeout: 15000 // <- 15 segundos, mais razoável
 });
