@@ -150,3 +150,16 @@ map.locate({
     watch: false,
     timeout: 15000 // <- 15 segundos, mais razoável
 });
+
+
+// ############################## MENSAGEM TOAST ##############################
+
+function showToast(message, duration = 3000) {
+    const toast = document.getElementById('toastMessage');
+    toast.textContent = message;
+    toast.style.display = 'block';
+
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, duration);
+}
