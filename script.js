@@ -72,7 +72,12 @@ var searchControl = L.Control.extend({
         var button = L.DomUtil.create('button', '', container);
         button.innerHTML = 'Pesquisar';
         button.onclick = function() {
-            searchInEntroncamento(input.value);
+            var query = input.value.trim(); // remove espaços no início/fim
+            if (query === "") {
+                alert("Por favor, introduz um termo de pesquisa.");
+                return;
+            }
+            searchInEntroncamento(query);
         };
 
         return container;
